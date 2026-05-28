@@ -1,0 +1,104 @@
+<!<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Alert</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        #warning-box {
+            border: 2px solid #f00;
+            padding: 20px;
+            text-align: center;
+            background: rgba(255, 0, 0, 0.1);
+            box-shadow: 0 0 20px #f00;
+            display: none;
+            z-index: 10;
+        }
+
+        h1 { color: #f00; font-size: 1.5rem; }
+
+        .glitch {
+            font-size: 1.2rem;
+            animation: glitch-anim 0.2s infinite;
+        }
+
+        @keyframes glitch-anim {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        #qr-trigger {
+            cursor: pointer;
+            border: 2px white solid;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 0, 0, 0.3);
+            display: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="setup">
+        <p>Escanea o haz clic para procesar</p>
+        <div id="qr-trigger" onclick="startSimulation()">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=VirusSim" alt="QR Code">
+        </div>
+    </div>
+
+    <div id="warning-box">
+        <h1>⚠️ ERROR DE SISTEMA ⚠️</h1>
+        <p class="glitch">ACCESO NO AUTORIZADO DETECTADO</p>
+        <p>Extrayendo archivos confidenciales...</p>
+        <p id="progress">0%</p>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <script>
+        function startSimulation() {
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('warning-box').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+
+            let progress = 0;
+            const progressText = document.getElementById('progress');
+
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 10);
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    alert("PROCESO COMPLETADO: Datos enviados al servidor remoto.");
+                    location.reload(); // Reinicia la simulación
+                }
+                progressText.innerText = progress + "%";
+            }, 200);
+        }
+    </script>
+</body>
+</html>
